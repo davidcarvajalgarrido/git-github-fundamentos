@@ -55,3 +55,68 @@
 5. Sube los cambios de `main` a GitHub con `git push`.
 6. Verifica en GitHub que todo el historial está sincronizado.
 
+## Ejercicio 6: Entiende fetch vs pull
+
+1. Haz un cambio en GitHub directamente (edita cualquier archivo desde la web y haz commit).
+2. En local, NO hagas `git pull` todavía. En su lugar, usa `git fetch origin`.
+3. Usa `git log --oneline --all --graph` para ver que hay commits en `origin/main` que no están en tu `main` local.
+4. Verifica con `git status` que tu rama local está "detrás" de la remota.
+5. Revisa el contenido de tus archivos locales y confirma que AÚN NO han cambiado (fetch solo descarga, no fusiona).
+6. Ahora fusiona manualmente con `git merge origin/main` para integrar los cambios.
+7. Compara este proceso con hacer directamente `git pull` (que es `fetch + merge` automático).
+8. Repite el ejercicio: haz otro cambio en GitHub, pero esta vez usa directamente `git pull` y observa la diferencia.
+
+## Ejercicio 7: Rebase vs Merge con squash
+
+1. Crea una rama `feature/rebase-test` y haz 3 commits pequeños (ej: añadir líneas a un archivo).
+2. Vuelve a `main` y haz un commit diferente (ej: modificar otro archivo).
+3. Cambia a `feature/rebase-test` y haz `git rebase main` para "mover" tu rama encima de main.
+4. Observa con `git log --oneline --graph` que el historial es lineal (sin commit de merge).
+5. Haz push de la rama (puede que necesites `--force` si ya existía en remoto).
+6. Ahora crea otra rama `feature/squash-test` y haz 3 commits pequeños.
+7. Vuelve a `main` y haz `git merge --squash feature/squash-test`.
+8. Completa el squash con `git commit -m "Añadir feature squash-test"`.
+9. Observa con `git log` que los 3 commits se convirtieron en uno solo.
+10. Compara ambos enfoques: rebase mantiene commits individuales pero reescribe historia, squash los agrupa en uno.
+
+## Ejercicio 8: Experimenta con reset (soft, mixed, hard)
+
+1. Crea un archivo `test-reset.txt` con contenido y haz commit.
+2. Modifica el archivo y haz un segundo commit.
+3. Modifica el archivo nuevamente y haz un tercer commit.
+4. Usa `git log --oneline` para ver los 3 commits.
+5. Haz `git reset --soft HEAD~1` para deshacer el último commit manteniendo cambios en staging.
+6. Verifica con `git status` que los cambios están en staging (verde).
+7. Vuelve a hacer commit si quieres, o haz `git reset --mixed HEAD~1` (o simplemente `git reset HEAD~1`).
+8. Verifica con `git status` que ahora los cambios están en el working directory (rojo), no en staging.
+9. Vuelve a hacer commit y luego prueba `git reset --hard HEAD~1`.
+10. Verifica que los cambios se perdieron completamente (el archivo volvió al estado anterior).
+11. **Cuidado**: `--hard` elimina cambios permanentemente. Úsalo solo cuando estés seguro.
+
+## Ejercicio 9: Deshaz cambios públicos con revert
+
+1. Crea un archivo `feature.txt` con la línea `funcionalidad activa` y haz commit.
+2. Sube el commit a GitHub con `git push`.
+3. Crea otro commit modificando el archivo a `funcionalidad mejorada` y súbelo también.
+4. Te das cuenta de que el último cambio fue un error y necesitas deshacerlo.
+5. NO uses `git reset` (porque ya está en el historial público de GitHub).
+6. En su lugar, usa `git revert HEAD` para crear un nuevo commit que deshace el último.
+7. Git abrirá un editor para el mensaje de commit, guárdalo y cierra.
+8. Verifica con `git log` que hay un nuevo commit de "Revert".
+9. Verifica que el archivo volvió a `funcionalidad activa`.
+10. Sube el revert a GitHub con `git push`.
+11. Observa en GitHub que el historial está completo: commit original → commit erróneo → commit de revert.
+
+## Ejercicio 10: Configura SSH para GitHub
+
+1. En tu terminal, genera un par de claves SSH con `ssh-keygen -t ed25519 -C "tu-email@ejemplo.com"`.
+2. Cuando te pregunte dónde guardar la clave, presiona Enter para aceptar la ubicación por defecto (`~/.ssh/id_ed25519`).
+3. Opcionalmente, establece una passphrase (contraseña) para mayor seguridad, o déjala vacía.
+4. Verifica que se crearon dos archivos: `~/.ssh/id_ed25519` (privada) y `~/.ssh/id_ed25519.pub` (pública).
+5. Muestra tu clave pública con `cat ~/.ssh/id_ed25519.pub` y cópiala al portapapeles.
+6. Ve a GitHub → Settings → SSH and GPG keys → New SSH key.
+7. Pega tu clave pública, dale un título descriptivo (ej: "Mi laptop") y guárdala.
+8. Prueba la conexión con `ssh -T git@github.com` (debe decir "Hi usuario! You've successfully authenticated").
+9. Cambia la URL de tu remoto a SSH: `git remote set-url origin git@github.com:tu-usuario/mi-proyecto-git.git`.
+10. Verifica con `git remote -v` que ahora usa SSH en lugar de HTTPS.
+11. Haz un cambio, commit y `git push` para verificar que funciona sin pedir contraseña.
