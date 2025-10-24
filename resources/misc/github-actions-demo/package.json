@@ -1,0 +1,20 @@
+{
+  "name": "github-actions-demo",
+  "version": "1.0.0",
+  "description": "Proyecto demo para practicar GitHub Actions",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "build": "node build.js"
+  },
+  "keywords": ["demo", "github-actions", "ci-cd"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}
